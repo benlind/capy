@@ -14,6 +14,7 @@
   - panthers
   - ocelots
   - eagles
+- High score list
 
 ## Deployment
 
