@@ -14,35 +14,35 @@ export default class Enemy {
     this.direction = randArrayItem(['right', 'left'])
     this.distanceSinceLastAnimation = 0
     this.spriteFrame = 0
-    this.speed = 1
+    this.speed = .75
   }
 
-  update () {
+  update (deltaTime) {
     if (this.direction === 'right') {
       if (this.platform.width > g.tileWidth) {
         // Platform is wider than one tile
-        this.x += this.speed
+        this.x += this.speed * deltaTime
       }
 
       // Off the right platform edge?
       if (this.x + this.width > this.platform.x + this.platform.width) {
-        this.x -= this.speed
+        this.x -= this.speed * deltaTime
         this.direction = 'left'
       }
     }
     else if (this.direction === 'left') {
       if (this.platform.width > g.tileWidth) {
         // Platform is wider than one tile
-        this.x -= this.speed
+        this.x -= this.speed * deltaTime
       }
 
       // Off the left platform edge?
       if (this.x < this.platform.x) {
-        this.x += this.speed
+        this.x += this.speed * deltaTime
         this.direction = 'right'
       }
     }
-    this.distanceSinceLastAnimation += 3
+    this.distanceSinceLastAnimation += this.speed * deltaTime
   }
 
   // There was a collision between the platform and this tile
@@ -65,7 +65,7 @@ export default class Enemy {
     const sprite = this.sprites[this.direction]
 
     // Advance to the next frame in the sprite animation
-    if (this.distanceSinceLastAnimation >= 30) {
+    if (this.distanceSinceLastAnimation >= 20) {
       this.distanceSinceLastAnimation = 0
       this.spriteFrame = (this.spriteFrame + 1) % (sprite.frames)
     }

@@ -9,8 +9,8 @@ export default class Platform {
     this.sprites = sprites
   }
 
-  update () {
-    this.y -= 2
+  update (deltaTime) {
+    this.y -= 2.5 * deltaTime
   }
 
   draw () {

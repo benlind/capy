@@ -10,6 +10,7 @@ export default class Player {
     this.height = height
     this.sprites = sprites
 
+    this.speed = 3.5
     this.jumping = false
     this.direction = 'right'
     this.yVelocity = 0
@@ -21,41 +22,42 @@ export default class Player {
     this.damageStartTime = 0
   }
 
-  update (pressedKeys) {
+  update (deltaTime, pressedKeys) {
     if (pressedKeys.right) {
       this.direction = 'right'
-      this.x += 3.5
-      this.distanceSinceLastAnimation += 3.5
-      this.distanceSinceLastAudio += 3.5
+      const distance = this.speed * deltaTime
+      this.x += distance
+      this.distanceSinceLastAnimation += distance
+      this.distanceSinceLastAudio += distance
     }
     if (pressedKeys.left) {
       this.direction = 'left'
-      this.x -= 3.5
-      this.distanceSinceLastAnimation += 3.5
-      this.distanceSinceLastAudio += 3.5
+      const distance = this.speed * deltaTime
+      this.x -= distance
+      this.distanceSinceLastAnimation += distance
+      this.distanceSinceLastAudio += distance
     }
     if (pressedKeys.up) {
       if (!this.jumping) {
         this.jumping = true
-        this.yVelocity = this.wearing.boots ? -20 : -13
+        this.yVelocity = this.wearing.boots
+          ? -25
+          : -20
         playSound('jump')
       }
     }
 
     // Update vertical position based on velocity
     const gravity = .5
-    const maxVelocity = 25
-    this.y += this.yVelocity
+    const maxFallSpeed = 7
+    this.y += this.yVelocity * deltaTime
     this.yVelocity = this.yVelocity + gravity
-    if (this.yVelocity > maxVelocity) {
-      this.yVelocity = maxVelocity
-    }
-    if (this.yVelocity < -maxVelocity) {
-      this.yVelocity = -maxVelocity
+    if (this.yVelocity > maxFallSpeed) {
+      this.yVelocity = maxFallSpeed
     }
 
     const xFriction = 1
-    this.x += this.xVelocity
+    this.x += this.xVelocity * deltaTime
     if (this.xVelocity > 0) {
       this.xVelocity = Math.max(this.xVelocity - xFriction, 0)
     }
@@ -141,7 +143,7 @@ export default class Player {
     }
 
     // Advance to the next frame in the sprite animation
-    if (this.distanceSinceLastAnimation >= 15) {
+    if (this.distanceSinceLastAnimation >= 20) {
       this.distanceSinceLastAnimation = 0
       this.spriteFrame = (this.spriteFrame + 1) % (playerSprite.frames)
     }

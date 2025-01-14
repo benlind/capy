@@ -37,6 +37,10 @@ let gameStarted = false
 const startingLives = 3
 const startButtonHeight = 75
 
+let lastFrameTime = 0
+const frameRate = 60
+const timePerFrame = 1000 / frameRate
+
 const sprites = {
   capybaraRight: {
     path: './sprites/capybara-right.png',
@@ -152,15 +156,23 @@ function startScreen () {
 
 // Runs for every frame
 function gameLoop () {
+  const currentTime = Date.now()
+  if (!lastFrameTime) {
+    lastFrameTime = currentTime
+  }
+
+  const deltaTime = (currentTime - lastFrameTime) / timePerFrame
+  lastFrameTime = currentTime
+
   let nextLoop = gameLoop
 
   generateTiles()
 
-  player.update(pressedKeys)
+  player.update(deltaTime, pressedKeys)
 
   let newEnemies = []
   for (const enemy of enemies) {
-    enemy.update()
+    enemy.update(deltaTime)
 
     // Player enemy collision
     let collision = getCollision(player, enemy)
@@ -195,7 +207,7 @@ function gameLoop () {
   // top of the screen
   let newPlatforms = []
   for (const platform of platforms) {
-    platform.update()
+    platform.update(deltaTime)
     if (platform.y + g.tileHeight >= 0) {
       // The platform hasn't yet fallen off the top of the screen, so keep it
       newPlatforms.push(platform)
@@ -325,7 +337,7 @@ function drawBackground () {
 
 // Generate platforms, enemies, etc.
 function generateTiles () {
-  if (timeSinceLastPlatform++ > 50) {
+  if (timeSinceLastPlatform++ > 100) {
     timeSinceLastPlatform = 0
     const newPlatforms = generatePlatformRow({
       platformMiddle: sprites.platformMiddle,
