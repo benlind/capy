@@ -15,6 +15,8 @@
   - ocelots
   - eagles
 - High score list
+- Don't allow jumping while falling
+- Update jumping to change height depending on how long you hold the jump button
 
 ## Deployment
 
