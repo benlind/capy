@@ -1,10 +1,11 @@
 const canvas = document.getElementById('canvas')
 
-canvas.width = Math.min(window.innerWidth, 512)
-canvas.height = Math.max(window.innerHeight, 512)
-
 const tileWidth = 32
 const tileHeight = 32
+
+// Ensure the width is exactly divisible by the tile width
+canvas.width = Math.floor((window.innerWidth - 32) / tileWidth) * tileWidth
+canvas.height = window.innerHeight - 32
 
 export default {
   canvas,
