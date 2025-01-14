@@ -17,13 +17,36 @@ export default class Platform {
     const totalTiles = this.width / g.tileWidth
     for (let i = 0; i < totalTiles; i++) {
       let sprite
-      if (this.width === g.tileWidth) {
+
+      const isAgainstLeftSide = this.x === 0 && i === 0
+      const isAgainstRightSide = this.x + i * g.tileWidth >= g.canvasWidth - g.tileWidth
+      const isStartingTile = i === 0
+      const isEndingTile = i === totalTiles - 1
+      const isSingleTile = this.width === g.tileWidth
+
+      if (isAgainstLeftSide) {
+        if (isSingleTile) {
+          sprite = this.sprites.right
+        }
+        else {
+          sprite = this.sprites.middle
+        }
+      }
+      else if (isAgainstRightSide) {
+        if (isSingleTile) {
+          sprite = this.sprites.left
+        }
+        else {
+          sprite = this.sprites.middle
+        }
+      }
+      else if (isSingleTile) {
         sprite = this.sprites.both
       }
-      else if (i === 0) {
+      else if (isStartingTile) {
         sprite = this.sprites.left
       }
-      else if (i === totalTiles - 1) {
+      else if (isEndingTile) {
         sprite = this.sprites.right
       }
       else {
